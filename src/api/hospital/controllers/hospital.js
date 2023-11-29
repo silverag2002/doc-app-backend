@@ -1,4 +1,5 @@
 "use strict";
+const bcrypt = require("bcryptjs");
 
 /**
  * hospital controller
@@ -9,20 +10,55 @@ const { createCoreController } = require("@strapi/strapi").factories;
 module.exports = createCoreController(
   "api::hospital.hospital",
   ({ strapi }) => ({
-    async find(ctx) {
-      let entities;
-      console.log("CTX>STASTE", ctx.state);
+    async create(ctx) {
+      if (ctx.state.route.method == "POST" && ctx.state.user.user_type < 2) {
+        const { name, email, contact_number, password, address } =
+          ctx.request.body;
 
-      return "ANKIT";
-    },
-
-    async findOne(ctx) {
-      const { id } = ctx.params;
-      const entity = await strapi.services.hospital.findOne({
-        id,
-        "organisation.id": ctx.state.user.organisation,
-      });
-      return strapi.services.hospital.sanitize(entity);
+        const hashPassword = (password) => bcrypt.hash(password, 10);
+        try {
+          const loginInfo = await strapi
+            .query("plugin::users-permissions.user")
+            .create({
+              data: {
+                username: name,
+                email,
+                password: await hashPassword(password),
+                confirmed: true,
+                user_type: 2,
+                role: 4,
+              },
+            });
+          console.log("ORG HI", ctx.state);
+          const orgInfo = await strapi.db
+            .query("api::organisation.organisation")
+            .findOne({ where: { email: ctx.state.user.email } });
+          console.log("ORg Info", orgInfo);
+          if (!orgInfo) {
+            ctx.badRequest("Organsation not found");
+          }
+          const hostpitalCreation = await strapi.entityService.create(
+            "api::hospital.hospital",
+            {
+              data: {
+                name,
+                contact_number,
+                address,
+                organisation: orgInfo.id,
+                email,
+              },
+            }
+          );
+          ctx.send({ message: "Hospital Created" });
+        } catch (err) {
+          console.log(err);
+          ctx.internalServerError(
+            "Something went wrong please try again later"
+          );
+        }
+      } else {
+        ctx.unauthorized("You are Unauthorised to perform this action");
+      }
     },
   })
 );
