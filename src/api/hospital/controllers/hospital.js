@@ -1,6 +1,14 @@
 "use strict";
 const bcrypt = require("bcryptjs");
-const { USER_CODE } = require("../../../utils/constants");
+const USER_CODE = Object.freeze({
+  SUPER_ADMIN: 0,
+  ORGANISATION: 1,
+  HOSPITAL: 2,
+  CLINICS: 3,
+  DOCTOR: 4,
+  NURSE: 5,
+  STAFF: 6,
+});
 
 /**
  * hospital controller
@@ -34,9 +42,25 @@ module.exports = createCoreController(
               },
             });
           console.log("ORG HI", ctx.state);
-          const orgInfo = await strapi.db
-            .query("api::organisation.organisation")
-            .findOne({ where: { email: ctx.state.user.email } });
+          //   const orgInfo = await strapi.db
+          //     .query("api::organisation.organisation")
+          //     .findOne({ where: { email: ctx.state.user.email } });
+          //   console.log("ORg Info", orgInfo);
+
+          let orgInfo;
+          if (ctx.state.user.user_type == USER_CODE.ORGANISATION) {
+            //from token we know its org so getting org id from org table
+            orgInfo = await strapi.db
+              .query("api::organisation.organisation")
+              .findOne({ where: { email: ctx.state.user.email } });
+            console.log("ORg Info", orgInfo);
+          } else {
+            //super admin or higher authority directly trying to create hospital so orgId is expected
+            orgInfo = ctx.request.body.orgId;
+            if (!orgInfo) {
+              ctx.badRequest("Org Id not provided");
+            }
+          }
           console.log("ORg Info", orgInfo);
           if (!orgInfo) {
             ctx.badRequest("Organsation not found");
