@@ -4,7 +4,8 @@
   "info": {
     "singularName": "organisation",
     "pluralName": "organisations",
-    "displayName": "Organisation"
+    "displayName": "Organisation",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -27,6 +28,15 @@
     },
     "org_id": {
       "type": "uid"
+    },
+    "hospitals": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::hospital.hospital",
+      "mappedBy": "organisation"
+    },
+    "email": {
+      "type": "email"
     }
   }
 }

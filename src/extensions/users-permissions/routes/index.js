@@ -8,13 +8,4 @@ module.exports = [
       auth: false,
     },
   },
-  {
-    method: "POST",
-    path: "/auth/signin",
-    handler: "auth.signin",
-    config: {
-      prefix: "",
-      auth: false,
-    },
-  },
 ];
