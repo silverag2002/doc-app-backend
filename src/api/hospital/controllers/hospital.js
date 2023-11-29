@@ -1,5 +1,6 @@
 "use strict";
 const bcrypt = require("bcryptjs");
+const { USER_CODE } = require("../../../utils/constants");
 
 /**
  * hospital controller
@@ -11,7 +12,10 @@ module.exports = createCoreController(
   "api::hospital.hospital",
   ({ strapi }) => ({
     async create(ctx) {
-      if (ctx.state.route.method == "POST" && ctx.state.user.user_type < 2) {
+      if (
+        ctx.state.route.method == "POST" &&
+        ctx.state.user.user_type < USER_CODE.HOSPITAL
+      ) {
         const { name, email, contact_number, password, address } =
           ctx.request.body;
 
@@ -25,7 +29,7 @@ module.exports = createCoreController(
                 email,
                 password: await hashPassword(password),
                 confirmed: true,
-                user_type: 2,
+                user_type: USER_CODE.HOSPITAL,
                 role: 4,
               },
             });
