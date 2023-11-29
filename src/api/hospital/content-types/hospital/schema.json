@@ -29,6 +29,15 @@
     },
     "email": {
       "type": "email"
+    },
+    "hospital_id": {
+      "type": "uid"
+    },
+    "clinics": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::clinic.clinic",
+      "mappedBy": "hospital"
     }
   }
 }

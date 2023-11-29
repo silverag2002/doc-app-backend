@@ -362,89 +362,6 @@ export interface AdminTransferTokenPermission extends Schema.CollectionType {
   };
 }
 
-export interface ApiHospitalHospital extends Schema.CollectionType {
-  collectionName: 'hospitals';
-  info: {
-    singularName: 'hospital';
-    pluralName: 'hospitals';
-    displayName: 'Hospital';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String;
-    address: Attribute.Text;
-    contact_number: Attribute.String;
-    organisation: Attribute.Relation<
-      'api::hospital.hospital',
-      'manyToOne',
-      'api::organisation.organisation'
-    >;
-    email: Attribute.Email;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::hospital.hospital',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::hospital.hospital',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
-export interface ApiOrganisationOrganisation extends Schema.CollectionType {
-  collectionName: 'organisations';
-  info: {
-    singularName: 'organisation';
-    pluralName: 'organisations';
-    displayName: 'Organisation';
-    description: '';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    name: Attribute.String;
-    address: Attribute.Text;
-    status: Attribute.Boolean & Attribute.DefaultTo<false>;
-    contact_number: Attribute.String &
-      Attribute.SetMinMaxLength<{
-        minLength: 10;
-      }>;
-    org_id: Attribute.UID;
-    hospitals: Attribute.Relation<
-      'api::organisation.organisation',
-      'oneToMany',
-      'api::hospital.hospital'
-    >;
-    email: Attribute.Email;
-    createdAt: Attribute.DateTime;
-    updatedAt: Attribute.DateTime;
-    publishedAt: Attribute.DateTime;
-    createdBy: Attribute.Relation<
-      'api::organisation.organisation',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-    updatedBy: Attribute.Relation<
-      'api::organisation.organisation',
-      'oneToOne',
-      'admin::user'
-    > &
-      Attribute.Private;
-  };
-}
-
 export interface PluginUploadFile extends Schema.CollectionType {
   collectionName: 'files';
   info: {
@@ -765,6 +682,265 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
   };
 }
 
+export interface ApiClinicClinic extends Schema.CollectionType {
+  collectionName: 'clinics';
+  info: {
+    singularName: 'clinic';
+    pluralName: 'clinics';
+    displayName: 'Clinic';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    email: Attribute.Email;
+    address: Attribute.Text;
+    contact_number: Attribute.String;
+    name: Attribute.String;
+    clinic_id: Attribute.UID;
+    hospital: Attribute.Relation<
+      'api::clinic.clinic',
+      'manyToOne',
+      'api::hospital.hospital'
+    >;
+    doctors: Attribute.Relation<
+      'api::clinic.clinic',
+      'oneToMany',
+      'api::doctor.doctor'
+    >;
+    nurses: Attribute.Relation<
+      'api::clinic.clinic',
+      'oneToMany',
+      'api::nurse.nurse'
+    >;
+    staff: Attribute.Relation<
+      'api::clinic.clinic',
+      'oneToMany',
+      'api::staff.staff'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::clinic.clinic',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::clinic.clinic',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiDoctorDoctor extends Schema.CollectionType {
+  collectionName: 'doctors';
+  info: {
+    singularName: 'doctor';
+    pluralName: 'doctors';
+    displayName: 'Doctor';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    contact_number: Attribute.String;
+    doctor_id: Attribute.UID;
+    clinic: Attribute.Relation<
+      'api::doctor.doctor',
+      'manyToOne',
+      'api::clinic.clinic'
+    >;
+    email: Attribute.Email;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::doctor.doctor',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::doctor.doctor',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiHospitalHospital extends Schema.CollectionType {
+  collectionName: 'hospitals';
+  info: {
+    singularName: 'hospital';
+    pluralName: 'hospitals';
+    displayName: 'Hospital';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    address: Attribute.Text;
+    contact_number: Attribute.String;
+    organisation: Attribute.Relation<
+      'api::hospital.hospital',
+      'manyToOne',
+      'api::organisation.organisation'
+    >;
+    email: Attribute.Email;
+    hospital_id: Attribute.UID;
+    clinics: Attribute.Relation<
+      'api::hospital.hospital',
+      'oneToMany',
+      'api::clinic.clinic'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::hospital.hospital',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::hospital.hospital',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiNurseNurse extends Schema.CollectionType {
+  collectionName: 'nurses';
+  info: {
+    singularName: 'nurse';
+    pluralName: 'nurses';
+    displayName: 'Nurse';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    contact_number: Attribute.String;
+    email: Attribute.Email;
+    nurse_id: Attribute.UID;
+    clinic: Attribute.Relation<
+      'api::nurse.nurse',
+      'manyToOne',
+      'api::clinic.clinic'
+    >;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::nurse.nurse',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::nurse.nurse',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiOrganisationOrganisation extends Schema.CollectionType {
+  collectionName: 'organisations';
+  info: {
+    singularName: 'organisation';
+    pluralName: 'organisations';
+    displayName: 'Organisation';
+    description: '';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    address: Attribute.Text;
+    status: Attribute.Boolean & Attribute.DefaultTo<false>;
+    contact_number: Attribute.String &
+      Attribute.SetMinMaxLength<{
+        minLength: 10;
+      }>;
+    org_id: Attribute.UID;
+    hospitals: Attribute.Relation<
+      'api::organisation.organisation',
+      'oneToMany',
+      'api::hospital.hospital'
+    >;
+    email: Attribute.Email;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::organisation.organisation',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::organisation.organisation',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
+export interface ApiStaffStaff extends Schema.CollectionType {
+  collectionName: 'staffs';
+  info: {
+    singularName: 'staff';
+    pluralName: 'staffs';
+    displayName: 'Staff';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    name: Attribute.String;
+    email: Attribute.Email;
+    contact_number: Attribute.String;
+    clinic: Attribute.Relation<
+      'api::staff.staff',
+      'manyToOne',
+      'api::clinic.clinic'
+    >;
+    staff_id: Attribute.UID;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    publishedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::staff.staff',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::staff.staff',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -775,14 +951,18 @@ declare module '@strapi/types' {
       'admin::api-token-permission': AdminApiTokenPermission;
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
-      'api::hospital.hospital': ApiHospitalHospital;
-      'api::organisation.organisation': ApiOrganisationOrganisation;
       'plugin::upload.file': PluginUploadFile;
       'plugin::upload.folder': PluginUploadFolder;
       'plugin::i18n.locale': PluginI18NLocale;
       'plugin::users-permissions.permission': PluginUsersPermissionsPermission;
       'plugin::users-permissions.role': PluginUsersPermissionsRole;
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
+      'api::clinic.clinic': ApiClinicClinic;
+      'api::doctor.doctor': ApiDoctorDoctor;
+      'api::hospital.hospital': ApiHospitalHospital;
+      'api::nurse.nurse': ApiNurseNurse;
+      'api::organisation.organisation': ApiOrganisationOrganisation;
+      'api::staff.staff': ApiStaffStaff;
     }
   }
 }
