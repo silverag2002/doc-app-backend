@@ -34,7 +34,7 @@ async function login(ctx) {
       user: user,
     });
   } else {
-    return ctx.badRequest("Unauthorized");
+    return ctx.unauthorized("Unauthorized");
   }
 }
 
